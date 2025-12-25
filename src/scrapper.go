@@ -1,28 +1,39 @@
 package src
 
 import (
-	"log"
 	"net/http"
+	"sync"
+	"time"
 
 	"github.com/PuerkitoBio/goquery"
 )
 
-func MyScrapper() {
-	res, err := http.Get("https://hamzasiddiqui.netlify.app/")
-	if err != nil {
-		log.Fatal(err)
-	}
+func Worker(id int, jobs <-chan string, results chan<- Result, wg *sync.WaitGroup) {
+	defer wg.Done()
 
-	defer res.Body.Close()
-	if res.StatusCode != 200 {
-		log.Fatalf("Status code error: %d %s", res.StatusCode, res.Status)
-	}
+	client := &http.Client{Timeout: 10 * time.Second}
 
-	//Load HTML
-	doc, err := goquery.NewDocumentFromReader(res.Body)
-	if err != nil {
-		log.Fatal(err)
-	}
+	for url := range jobs {
 
-	println(doc.Html())
+		res, err := client.Get(url)
+		if err != nil {
+			results <- Result{URL: url, Err: err}
+			continue
+		}
+
+		//Load HTML
+		doc, err := goquery.NewDocumentFromReader(res.Body)
+		res.Body.Close()
+
+		if err != nil {
+			results <- Result{URL: url, Err: err}
+			continue
+		}
+
+		results <- Result{URL: url, StatusCode: res.StatusCode}
+
+		println(doc.Html())
+
+		time.Sleep(1 * time.Second)
+	}
 }
