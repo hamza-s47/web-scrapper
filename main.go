@@ -10,6 +10,7 @@ import (
 )
 
 func main() {
+	// Conditionally run it
 	// r := gin.Default()
 	// src.RegisterRoutes(r)
 

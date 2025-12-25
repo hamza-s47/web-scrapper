@@ -5,3 +5,7 @@ type Result struct {
 	StatusCode int
 	Err        error
 }
+
+type Urls struct {
+	URLs []string `json:"urls"`
+}
