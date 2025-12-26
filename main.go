@@ -54,4 +54,3 @@ func main() {
 		fmt.Println("Completed:", res.URL, "Status:", res.StatusCode)
 	}
 }
-// delete 
