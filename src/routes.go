@@ -17,10 +17,12 @@ func RegisterRoutes(r *gin.Engine) {
 		var newUrls Urls
 
 		if err := c.BindJSON(&newUrls); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
 
-		c.IndentedJSON(http.StatusCreated, newUrls)
+		c.IndentedJSON(http.StatusCreated, ScrapeService(newUrls))
+
 	})
 
 	r.Run()
