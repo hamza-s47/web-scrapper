@@ -9,7 +9,10 @@ import (
 func RegisterRoutes(r *gin.Engine) {
 	r.GET("/help", func(c *gin.Context) {
 		c.JSON(200, gin.H{
-			"status": "ok",
+			"how_to_use": "Post the request body as an array of domains (use param '/urls') or by CLI",
+			"body":       "{[\"http://url1.com\", \"http://url2.com\", \"http://url.com\"]}",
+			"cli":        "go run main.go http://url1.com http://url2.com ... http://url.com",
+			"help":       "go run main.go --help",
 		})
 	})
 

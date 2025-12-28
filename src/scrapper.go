@@ -9,7 +9,7 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
-func extractLinks(doc *goquery.Document) []string {
+func extractLinks(doc *goquery.Document) ([]string, int) {
 	links := []string{}
 
 	doc.Find("a[href]").Each(func(i int, s *goquery.Selection) {
@@ -19,10 +19,10 @@ func extractLinks(doc *goquery.Document) []string {
 		}
 	})
 
-	return links
+	return links, len(links)
 }
 
-func extractHeadings(doc *goquery.Document) []string {
+func extractHeadings(doc *goquery.Document) ([]string, int) {
 	headings := []string{}
 
 	doc.Find("h1, h2, h3, h4, h5, h6").Each(func(i int, s *goquery.Selection) {
@@ -32,7 +32,7 @@ func extractHeadings(doc *goquery.Document) []string {
 		}
 	})
 
-	return headings
+	return headings, len(headings)
 }
 
 func Worker(id int, jobs <-chan string, results chan<- Result, wg *sync.WaitGroup) {
@@ -57,9 +57,12 @@ func Worker(id int, jobs <-chan string, results chan<- Result, wg *sync.WaitGrou
 			continue
 		}
 
-		data := ScrapedData{Links: extractLinks(doc), Headings: extractHeadings(doc)}
+		links, lc := extractLinks(doc)
+		headings, hc := extractHeadings(doc)
 
-		results <- Result{URL: url, StatusCode: res.StatusCode, Data: data}
+		data := ScrapedData{Links: links, Headings: headings}
+
+		results <- Result{URL: url, StatusCode: res.StatusCode, LinksCount: lc, HeadingsCount: hc, Data: data}
 
 		time.Sleep(1 * time.Second)
 	}
