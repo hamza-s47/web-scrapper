@@ -12,9 +12,9 @@ func main() {
 	args := os.Args[1:]
 
 	if len(args) == 0 {
-		fmt.Println("Type:")
-		fmt.Println("./app http://url1.com http://url2.com ... http://url.com")
-		fmt.Println("./app main.go --help")
+		fmt.Printf("%s%sFor helping instruction type:\n", src.Bold, src.Red)
+		// fmt.Println("./app http://url1.com http://url2.com ... http://url.com")
+		fmt.Printf("./app --help%s\n\n\n", src.Reset)
 	}
 
 	switch args[0] {
@@ -23,9 +23,9 @@ func main() {
 		src.RegisterRoutes(r)
 
 	case "--help", "-h":
-		fmt.Println("Type:")
-		fmt.Println("./app http://url1.com http://url2.com ... http://url.com		(Run scraper via CLI)")
-		fmt.Println("./app --api    (Start API server on port: 8080)")
+		fmt.Printf("%s%sType the following commands (green ones):%s\n", src.BU, src.Blue, src.Reset)
+		fmt.Printf("%s%s./app http://url1.com http://url2.com ... http://url.com %s----> %s(Run scraper via CLI)%s\n", src.Green, src.Bold, src.Blue, src.Yellow, src.Reset)
+		fmt.Printf("%s%s./app --api	%s-------------------------------------------->  %s(Start API server on port: 8080)%s\n", src.Green, src.Bold, src.Blue, src.Yellow, src.Reset)
 
 	default:
 		src.ScrapeCli(args)
