@@ -21,7 +21,7 @@ Supports both CLI and REST API usage.
 
 ## Usage
 - git clone https://github.com/hamza-s47/web-scrapper.git
-- cd your-repo-name
+- cd web-scrapper
 - go mod tidy
 - go build -o app (if needed otherwise it is already built)
 - ./app --help (for helping instruction)
